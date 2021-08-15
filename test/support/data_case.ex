@@ -18,7 +18,8 @@ defmodule BlogPostApi.DataCase do
 
   using do
     quote do
-      alias BlogPostApi.Repo
+      alias BlogPostApi.{Factory, Repo}
+      alias Ecto.Changeset
 
       import Ecto
       import Ecto.Changeset

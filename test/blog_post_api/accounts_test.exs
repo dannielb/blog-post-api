@@ -2,67 +2,91 @@ defmodule BlogPostApi.AccountsTest do
   use BlogPostApi.DataCase
 
   alias BlogPostApi.Accounts
+  alias BlogPostApi.Accounts.User
 
-  describe "users" do
-    alias BlogPostApi.Accounts.User
+  describe "create/1" do
+    test "success: it inserts a user in the db and returns the user" do
+      params = Factory.string_params_for(:user)
+      assert {:ok, %User{} = returned_user} = Accounts.create_user(params)
+      user_from_db = Repo.get(User, returned_user.id)
 
-    @valid_attrs %{displayName: "some displayName", email: "some email", password: "some password"}
-    @update_attrs %{displayName: "some updated displayName", email: "some updated email", password: "some updated password"}
-    @invalid_attrs %{displayName: nil, email: nil, password: nil}
+      mutated = ["password"]
 
-    def user_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Accounts.create_user()
+      for {param_field, expected} <- params, param_field not in mutated do
+        schema_field = String.to_existing_atom(param_field)
+        actual = Map.get(user_from_db, schema_field)
 
-      user
+        assert actual == expected,
+               "Values did not match for field: #{param_field}\nexpected: #{inspect(expected)}\nactual: #{
+                 inspect(actual)
+               }"
+      end
+
+      assert Bcrypt.verify_pass(params["password"], user_from_db.password)
+
+      assert user_from_db.inserted_at == user_from_db.updated_at
     end
 
-    test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Accounts.list_users() == [user]
+    test "error: returns an error tuple when user can't be created" do
+      bad_params = %{}
+      assert {:error, %Changeset{valid?: false}} = Accounts.create_user(bad_params)
+    end
+  end
+
+  describe "get_user/1" do
+    test "success: it returns a user when given a valid UUID" do
+      existing_user = Factory.insert(:user)
+      assert {:ok, _returned_user} = Accounts.get_user(existing_user.id)
     end
 
-    test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
-      assert Accounts.get_user!(user.id) == user
+    test "error: it returns an error tuple when a user doesn't exist" do
+      assert {:error, :not_found} = Accounts.get_user(Ecto.UUID.generate())
+    end
+  end
+
+  describe "update_user/2" do
+    test "success: it updates database and returns the updated user" do
+      existing_user = Factory.insert(:user)
+
+      params =
+        Factory.string_params_for(:user)
+        |> Map.take(["display_name"])
+
+      assert {:ok, returned_user} = Accounts.update_user(existing_user, params)
+
+      user_from_db = Repo.get(User, returned_user.id)
+
+      expected_user_data =
+        existing_user
+        |> Map.from_struct()
+        |> Map.drop([:__meta__, :inserted_at, :updated_at])
+        |> Map.put(:display_name, params["display_name"])
+
+      for {field, expected} <- expected_user_data do
+        actual = Map.get(user_from_db, field)
+
+        assert actual == expected, "Values mismatch on update, field: #{field} \n
+          expected: #{expected} \n
+          actual: #{actual}"
+      end
+
+      refute user_from_db.updated_at == existing_user.updated_at
     end
 
-    test "create_user/1 with valid data creates a user" do
-      assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.displayName == "some displayName"
-      assert user.email == "some email"
-      assert user.password == "some password"
-    end
+    test "error: returns an error tuple when user can't be updated" do
+      existing_user = Factory.insert(:user)
+      bad_params = %{"display_name" => nil}
 
-    test "create_user/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
+      assert {:error, %Changeset{}} = Accounts.update_user(existing_user, bad_params)
     end
+  end
 
-    test "update_user/2 with valid data updates the user" do
-      user = user_fixture()
-      assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
-      assert user.displayName == "some updated displayName"
-      assert user.email == "some updated email"
-      assert user.password == "some updated password"
-    end
+  describe "delete/1" do
+    test "success: it deletes the user" do
+      user = Factory.insert(:user)
+      assert {:ok, _} = Accounts.delete_user(user)
 
-    test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
-      assert user == Accounts.get_user!(user.id)
-    end
-
-    test "delete_user/1 deletes the user" do
-      user = user_fixture()
-      assert {:ok, %User{}} = Accounts.delete_user(user)
-      assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
-    end
-
-    test "change_user/1 returns a user changeset" do
-      user = user_fixture()
-      assert %Ecto.Changeset{} = Accounts.change_user(user)
+      refute Repo.get(User, user.id)
     end
   end
 end

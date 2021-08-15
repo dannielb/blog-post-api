@@ -28,14 +28,20 @@ defmodule BlogPostApi.Accounts do
 
   ## Examples
 
-      iex> get_user!(123)
+      iex> get_user(123)
       %User{}
 
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
+      iex> get_user(456)
+      {:error, :not_found}
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user(id) do
+    if user = Repo.get(User, id) do
+      {:ok, user}
+    else
+      {:error, :not_found}
+    end
+  end
 
   @doc """
   Creates a user.
@@ -50,8 +56,7 @@ defmodule BlogPostApi.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
+    User.create_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -69,7 +74,7 @@ defmodule BlogPostApi.Accounts do
   """
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.update_changeset(attrs)
     |> Repo.update()
   end
 
@@ -99,6 +104,6 @@ defmodule BlogPostApi.Accounts do
 
   """
   def change_user(%User{} = user, attrs \\ %{}) do
-    User.changeset(user, attrs)
+    User.update_changeset(user, attrs)
   end
 end
