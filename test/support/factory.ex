@@ -6,7 +6,8 @@ defmodule BlogPostApi.Factory do
     %User{
       display_name: Faker.Person.name(),
       email: Faker.Internet.email(),
-      password: Faker.String.base64()
+      password: Faker.String.base64(),
+      image: Faker.Internet.image_url()
     }
   end
 
@@ -14,7 +15,8 @@ defmodule BlogPostApi.Factory do
     %User{
       display_name: DateTime.utc_now(),
       email: DateTime.utc_now(),
-      password: Enum.random(1..10)
+      password: Enum.random(1..10),
+      image: DateTime.utc_now()
     }
   end
 end

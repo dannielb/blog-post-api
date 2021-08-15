@@ -7,6 +7,7 @@ defmodule BlogPostApi.Repo.Migrations.AddUserTable do
       add :display_name, :string, null: false
       add :email, :string, size: 50, null: false
       add :password, :string, null: false
+      add :image, :string
 
       timestamps()
     end

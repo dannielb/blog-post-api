@@ -7,11 +7,12 @@ defmodule BlogPostApi.Accounts.UserTest do
     {:display_name, :string},
     {:email, :string},
     {:password, :string},
+    {:image, :string},
     {:inserted_at, :utc_datetime_usec},
     {:updated_at, :utc_datetime_usec}
   ]
 
-  @optional_for_creation [:id, :inserted_at, :updated_at]
+  @optional_for_creation [:id, :image, :inserted_at, :updated_at]
   @forbidden_update_fields [:id, :inserted_at, :updated_at]
   @update_fields_with_types for {field, type} <-
                                   @expected_fields_with_types,
