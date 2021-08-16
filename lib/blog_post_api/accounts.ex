@@ -43,6 +43,16 @@ defmodule BlogPostApi.Accounts do
     end
   end
 
+  def get_user_by_credentials(email, password) do
+    with %User{} = user <- Repo.get_by(User, %{email: email}),
+         true <- Bcrypt.verify_pass(password, user.password) do
+      {:ok, user}
+    else
+      false -> {:error, :invalid_data}
+      nil -> {:error, :invalid_data}
+    end
+  end
+
   @doc """
   Creates a user.
 

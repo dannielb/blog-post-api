@@ -12,7 +12,7 @@ msgstr ""
 
 ## From Ecto.Changeset.cast/4
 msgid "can't be blank"
-msgstr ""
+msgstr "\"%{field}\" is required"
 
 ## From Ecto.Changeset.unique_constraint/3
 msgid "has already been taken"
@@ -28,7 +28,10 @@ msgstr ""
 
 ## From Ecto.Changeset.validate_format/3
 msgid "has invalid format"
-msgstr ""
+msgstr "\"%{field}\" has invalid format"
+
+msgid "must be a valid email"
+msgstr "\"%{field}\" must be a valid email"
 
 ## From Ecto.Changeset.validate_subset/3
 msgid "has an invalid entry"
@@ -62,8 +65,8 @@ msgstr[1] ""
 
 msgid "should be at least %{count} character(s)"
 msgid_plural "should be at least %{count} character(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\"%{field}\" length should be at least %{count} character long"
+msgstr[1] "\"%{field}\" length should be at least %{count} characters long"
 
 msgid "should have at least %{count} item(s)"
 msgid_plural "should have at least %{count} item(s)"

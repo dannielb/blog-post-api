@@ -25,21 +25,24 @@ defmodule BlogPostApi.Accounts.User do
     %__MODULE__{}
     |> cast(params, all_fields())
     |> validate_required(all_fields() -- @optional_create_fields)
-    |> validate_length(:display_name, min: 8)
-    |> validate_length(:password, min: 6)
-    |> unique_constraint(:email, message: "Usuário ja cadastrado.")
-    |> validate_format(:email, ~r/^[\w.!#$%&’*+\-\/=?\^`{|}~]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/i, message: "must be a valid email")
-    |> hash_password()
+    |> changeset()
   end
 
   def update_changeset(%__MODULE__{} = user, params) do
     user
     |> cast(params, all_fields() -- @forbidden_update_fields)
     |> validate_required(all_fields() -- @optional_create_fields)
+    |> changeset()
+  end
+
+  def changeset(changeset) do
+    changeset
     |> validate_length(:display_name, min: 8)
     |> validate_length(:password, min: 6)
-    |> unique_constraint(:email)
-    |> validate_format(:email, ~r/^[\w.!#$%&’*+\-\/=?\^`{|}~]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/i)
+    |> unique_constraint(:email, message: "Usuário ja cadastrado.")
+    |> validate_format(:email, ~r/^[\w.!#$%&’*+\-\/=?\^`{|}~]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/i,
+      message: "must be a valid email"
+    )
     |> hash_password()
   end
 

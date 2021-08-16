@@ -69,6 +69,15 @@ defmodule BlogPostApiWeb do
     end
   end
 
+  def params do
+    quote do
+      use Ecto.Schema
+      import Ecto.Changeset
+
+      @primary_key false
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """
