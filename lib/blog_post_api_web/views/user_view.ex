@@ -24,6 +24,6 @@ defmodule BlogPostApiWeb.UserView do
   end
 
   def render("404.json", _params) do
-    %{message: "Usuário não encontrado"}
+    %{message: "Usuário não existe"}
   end
 end

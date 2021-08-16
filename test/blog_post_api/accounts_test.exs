@@ -75,7 +75,7 @@ defmodule BlogPostApi.AccountsTest do
 
     test "error: returns an error tuple when user can't be updated" do
       existing_user = Factory.insert(:user)
-      bad_params = %{"display_name" => nil}
+      bad_params = %{"email" => nil}
 
       assert {:error, %Changeset{}} = Accounts.update_user(existing_user, bad_params)
     end

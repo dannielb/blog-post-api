@@ -15,7 +15,7 @@ defmodule BlogPostApiWeb.UserControllerTest do
       assert %{"message" => _} = json_response(conn, 400)
     end
 
-    test "error: try to register user with invalid email(already_used)", %{conn: conn} do
+    test "error: try to register user with invalid email(already used)", %{conn: conn} do
       {:ok, existent_user} = Accounts.create_user(Factory.string_params_for(:user))
 
       conn =
@@ -64,13 +64,13 @@ defmodule BlogPostApiWeb.UserControllerTest do
   end
 
   describe "GET /user" do
-    setup [:create_user]
+    setup [:create_user, :conn_with_token]
 
-    test "success: lists all users", %{conn: conn, user: user} do
+    test "success: lists all users", %{conn_with_token: conn_with_token, user: user} do
       expected = [user_view(user)]
 
       assert expected ==
-               get(conn, Routes.user_path(conn, :index))
+               get(conn_with_token, Routes.user_path(conn_with_token, :index))
                |> json_response(200)
     end
   end
@@ -103,38 +103,17 @@ defmodule BlogPostApiWeb.UserControllerTest do
     end
   end
 
-  # describe "update user" do
-  #   setup [:create_user]
+  describe "delete user" do
+    setup [:create_user, :conn_with_token]
 
-  #   test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-  #     conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
-  #     assert %{"id" => ^id} = json_response(conn, 200)["data"]
+    test "success: deletes current user", %{conn_with_token: conn_with_token, user: user} do
+      assert delete(conn_with_token, Routes.user_path(conn_with_token, :delete))
+             |> response(204)
 
-  #     conn = get(conn, Routes.user_path(conn, :show, id))
-
-  #     assert %{
-  #              "id" => id
-  #            } = json_response(conn, 200)["data"]
-  #   end
-
-  #   test "renders errors when data is invalid", %{conn: conn, user: user} do
-  #     conn = put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
-  #     assert json_response(conn, 422)["errors"] != %{}
-  #   end
-  # end
-
-  # describe "delete user" do
-  #   setup [:create_user]
-
-  #   test "deletes chosen user", %{conn: conn, user: user} do
-  #     conn = delete(conn, Routes.user_path(conn, :delete, user))
-  #     assert response(conn, 204)
-
-  #     assert_error_sent 404, fn ->
-  #       get(conn, Routes.user_path(conn, :show, user))
-  #     end
-  #   end
-  # end
+      assert get(conn_with_token, Routes.user_path(conn_with_token, :show, user))
+             |> response(404)
+    end
+  end
 
   defp create_user(_) do
     {:ok, user} = Accounts.create_user(Factory.string_params_for(:user))

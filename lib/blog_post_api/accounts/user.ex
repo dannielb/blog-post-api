@@ -5,7 +5,7 @@ defmodule BlogPostApi.Accounts.User do
   @timestamps_opts type: :utc_datetime_usec
   @primary_key {:id, :binary_id, autogenerate: true}
 
-  @optional_create_fields [:id, :image, :inserted_at, :updated_at]
+  @optional_create_fields [:id, :display_name, :image, :inserted_at, :updated_at]
   @forbidden_update_fields [:id, :inserted_at, :updated_at]
 
   schema "users" do
@@ -39,7 +39,7 @@ defmodule BlogPostApi.Accounts.User do
     changeset
     |> validate_length(:display_name, min: 8)
     |> validate_length(:password, min: 6)
-    |> unique_constraint(:email, message: "Usuário ja cadastrado.")
+    |> unique_constraint(:email, message: "Usuário ja existe")
     |> validate_format(:email, ~r/^[\w.!#$%&’*+\-\/=?\^`{|}~]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/i,
       message: "must be a valid email"
     )

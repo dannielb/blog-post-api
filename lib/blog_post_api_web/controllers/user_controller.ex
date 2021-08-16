@@ -43,18 +43,8 @@ defmodule BlogPostApiWeb.UserController do
     end
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Accounts.get_user(id)
-
-    with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
-      render(conn, "show.json", user: user)
-    end
-  end
-
-  def delete(conn, %{"id" => id}) do
-    user = Accounts.get_user(id)
-
-    with {:ok, %User{}} <- Accounts.delete_user(user) do
+  def delete(conn, _) do
+    with {:ok, user} <- Guardian.Plug.current_resource(conn), {:ok, %User{}} <- Accounts.delete_user(user) do
       send_resp(conn, :no_content, "")
     end
   end
