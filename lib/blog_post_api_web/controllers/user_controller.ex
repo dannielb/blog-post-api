@@ -44,7 +44,8 @@ defmodule BlogPostApiWeb.UserController do
   end
 
   def delete(conn, _) do
-    with {:ok, user} <- Guardian.Plug.current_resource(conn), {:ok, %User{}} <- Accounts.delete_user(user) do
+    with {:ok, user} <- Guardian.Plug.current_resource(conn),
+         {:ok, %User{}} <- Accounts.delete_user(user) do
       send_resp(conn, :no_content, "")
     end
   end

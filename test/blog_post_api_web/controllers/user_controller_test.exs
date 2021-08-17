@@ -2,7 +2,6 @@ defmodule BlogPostApiWeb.UserControllerTest do
   use BlogPostApiWeb.ConnCase
   alias BlogPostApi.Factory
   alias BlogPostApi.Accounts
-  alias BlogPostApi.Guardian
 
   describe "POST /user" do
     test "success: register a user and returns it auth token", %{conn: conn} do
@@ -94,7 +93,7 @@ defmodule BlogPostApiWeb.UserControllerTest do
         get(conn_with_token, Routes.user_path(conn_with_token, :show, Faker.UUID.v4()))
         |> json_response(404)
 
-      assert json == %{"message" => "Usuário não encontrado"}
+      assert json == %{"message" => "Usuário não existe"}
     end
 
     test "error: returns 404 when try to access without a valid token", %{conn: conn} do
@@ -113,21 +112,6 @@ defmodule BlogPostApiWeb.UserControllerTest do
       assert get(conn_with_token, Routes.user_path(conn_with_token, :show, user))
              |> response(404)
     end
-  end
-
-  defp create_user(_) do
-    {:ok, user} = Accounts.create_user(Factory.string_params_for(:user))
-    %{user: user}
-  end
-
-  defp conn_with_token(context) do
-    {:ok, token, _} = Guardian.encode_and_sign(context.user, %{}, token_type: :access)
-
-    conn_with_token =
-      context.conn
-      |> put_req_header("authorization", "Bearer " <> token)
-
-    %{conn_with_token: conn_with_token}
   end
 
   defp user_view(user) do

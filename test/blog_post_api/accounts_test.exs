@@ -40,13 +40,30 @@ defmodule BlogPostApi.AccountsTest do
     end
 
     test "error: it returns an error tuple when a user doesn't exist" do
-      assert {:error, :not_found} = Accounts.get_user(Ecto.UUID.generate())
+      assert {:error, :not_found} = Accounts.get_user(Faker.UUID.v4())
+    end
+  end
+
+  describe "get_user_by_credentials/2" do
+    setup do
+      user_params = Factory.string_params_for(:user)
+      {:ok, user} = Accounts.create_user(user_params)
+      %{user: user, user_password: user_params["password"]}
+    end
+
+    test "success: receives a user with valid email and password", %{user: user, user_password: user_password} do
+      assert {:ok, ^user} = Accounts.get_user_by_credentials(user.email, user_password)
+    end
+
+    test "error: receives error tuple when given invalid credentials", %{user: user} do
+      assert {:error, :invalid_data} = Accounts.get_user_by_credentials(user.email, "i-am-invalid")
+      assert {:error, :invalid_data} = Accounts.get_user_by_credentials("invalid-email@email", "i-am-invalid")
     end
   end
 
   describe "update_user/2" do
     test "success: it updates database and returns the updated user" do
-      existing_user = Factory.insert(:user)
+      {:ok, existing_user} = Accounts.create_user(Factory.string_params_for(:user))
 
       params =
         Factory.string_params_for(:user)
@@ -69,8 +86,6 @@ defmodule BlogPostApi.AccountsTest do
           expected: #{expected} \n
           actual: #{actual}"
       end
-
-      refute user_from_db.updated_at == existing_user.updated_at
     end
 
     test "error: returns an error tuple when user can't be updated" do
