@@ -24,10 +24,12 @@ defmodule BlogPostApiWeb.Router do
     pipe_through [:api, :ensure_authed_access]
 
     resources "/user", UserController, only: [:index, :show]
+    get "/user/paginate/:page_number", UserController, :paginate
     put "/user", UserController, :update
     delete "/user/me", UserController, :delete
 
     get "/post/search", PostController, :search
+    get "/post/paginate/:page_number", PostController, :paginate
     resources "/post", PostController, only: [:create, :update, :delete, :show, :index]
   end
 end

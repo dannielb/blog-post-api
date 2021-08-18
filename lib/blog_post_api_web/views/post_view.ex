@@ -26,6 +26,18 @@ defmodule BlogPostApiWeb.PostView do
     %{id: post.id, title: post.title, content: post.content, user_id: post.user_id}
   end
 
+  def render("index_paginated.json", %{pagination: pagination}) do
+    %{
+      has_next: pagination.has_next,
+      has_prev: pagination.has_prev,
+      prev_page: pagination.prev_page,
+      next_page: pagination.next_page,
+      current_page: pagination.current_page,
+      count: pagination.count,
+      entries: render_many(pagination.entries, PostView, "post.json")
+    }
+  end
+
   def render("404.json", _params) do
     %{message: "Post não existe"}
   end

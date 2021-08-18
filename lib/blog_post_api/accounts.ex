@@ -7,6 +7,8 @@ defmodule BlogPostApi.Accounts do
   alias BlogPostApi.Repo
 
   alias BlogPostApi.Accounts.User
+  alias BlogPostApi.Pagination
+
 
   @doc """
   Returns the list of users.
@@ -19,6 +21,25 @@ defmodule BlogPostApi.Accounts do
   """
   def list_users do
     Repo.all(User)
+  end
+
+   @doc """
+  Returns a list of users paginated.
+
+  iex> paginate_users()
+   %{
+      has_next: true,
+      has_prev: false,
+      prev_page: 0,
+      next_page: 1,
+      current_page: 1,
+      count: total_count,
+      entries:  [%Post{}, ...]
+    }
+  """
+  def paginate_users(page \\ 1) do
+      User
+      |> Pagination.page(page)
   end
 
   @doc """

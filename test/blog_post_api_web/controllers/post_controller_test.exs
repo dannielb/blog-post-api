@@ -57,6 +57,38 @@ defmodule BlogPostApiWeb.PostControllerTest do
     end
   end
 
+  describe "GET /post/paginate/:page_number" do
+    setup [:create_user, :conn_with_token, :create_many_posts]
+
+    test "success: lists posts with pagination", %{conn_with_token: conn_with_token} do
+      assert %{
+               "has_next" => true,
+               "has_prev" => false,
+               "count" => 50,
+               "next_page" => 1,
+               "prev_page" => -1,
+               "entries" => [
+                 %{
+                   "content" => _,
+                   "published" => _,
+                   "title" => _,
+                   "updated" => _,
+                   "user" => %{
+                     "display_name" => _,
+                     "email" => _,
+                     "id" => _,
+                     "image" => _
+                   }
+                 }
+                 | _
+               ]
+             } =
+               conn_with_token
+               |> get(Routes.post_path(conn_with_token, :paginate, 1))
+               |> json_response(200)
+    end
+  end
+
   describe "GET /post/:id" do
     setup [:create_user, :conn_with_token, :create_post]
 
@@ -102,10 +134,11 @@ defmodule BlogPostApiWeb.PostControllerTest do
         |> json_response(200)
 
       search_term = String.downcase(search_term)
+
       for r <- results do
         title = String.downcase(r["title"])
         content = String.downcase(r["content"])
-        assert String.contains?(title, search_term) or  String.contains?(content, search_term)
+        assert String.contains?(title, search_term) or String.contains?(content, search_term)
       end
     end
   end
@@ -168,6 +201,11 @@ defmodule BlogPostApiWeb.PostControllerTest do
 
   defp create_post(context) do
     post = Factory.insert(:post, %{user: context.user})
+    %{post: post}
+  end
+
+  defp create_many_posts(context) do
+    post = Factory.insert_list(50, :post, %{user: context.user})
     %{post: post}
   end
 

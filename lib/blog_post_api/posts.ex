@@ -8,6 +8,7 @@ defmodule BlogPostApi.Posts do
 
   alias BlogPostApi.Accounts.User
   alias BlogPostApi.Posts.Post
+  alias BlogPostApi.Pagination
 
   @doc """
   Returns the list of posts.
@@ -21,6 +22,28 @@ defmodule BlogPostApi.Posts do
   def list_posts do
     Repo.all(Post)
     |> Repo.preload(:user)
+  end
+
+  @doc """
+  Returns a list of posts paginated.
+
+  iex> paginate_posts()
+   %{
+      has_next: true,
+      has_prev: false,
+      prev_page: 0,
+      next_page: 1,
+      current_page: 1,
+      count: total_count,
+      entries:  [%Post{}, ...]
+    }
+  """
+  def paginate_posts(page \\ 1) do
+    result =
+      Post
+      |> Pagination.page(page)
+
+    Map.put(result, :entries, Repo.preload(result[:entries], :user))
   end
 
   @doc """

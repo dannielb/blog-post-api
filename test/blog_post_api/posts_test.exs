@@ -93,10 +93,7 @@ defmodule BlogPostApi.PostsTest do
 
   describe "search/1" do
     @max_posts 50
-    setup do
-      posts = Factory.insert_list(@max_posts, :post)
-      %{posts: posts}
-    end
+    setup [:create_many_posts]
 
     test "success: returns posts based on title", %{posts: posts} do
       searched_post = Enum.random(posts)
@@ -129,9 +126,36 @@ defmodule BlogPostApi.PostsTest do
     end
   end
 
+  describe "paginate_posts/1" do
+    @default_per_page 15
+    setup [:create_many_posts]
+
+    test "success: returns posts in a valid number per page" do
+      result = Posts.paginate_posts(1)
+
+      assert %{
+        has_next: true,
+        has_prev: false,
+        count: 50,
+        next_page: 1,
+        prev_page: -1,
+        entries: _
+      } = result
+
+      assert Enum.count(result[:entries]) == @default_per_page + 1
+      assert %Post{} = List.first(result[:entries])
+      assert %{has_next: false, entries: []} = Posts.paginate_posts(5)
+    end
+  end
+
   defp create_post(_) do
     post = Factory.insert(:post)
     %{post: post}
+  end
+
+  defp create_many_posts(_) do
+    posts = Factory.insert_list(50, :post)
+    %{posts: posts}
   end
 
   defp assert_search_results(results, search_term) do

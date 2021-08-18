@@ -110,4 +110,29 @@ defmodule BlogPostApi.AccountsTest do
       refute Repo.get(User, user.id)
     end
   end
+
+  describe "paginate_users/1" do
+    @default_per_page 15
+    setup do
+      users = Factory.insert_list(50, :user)
+      %{users: users}
+    end
+
+    test "success: returns users in a valid number per page" do
+      result = Accounts.paginate_users(1)
+
+      assert %{
+        has_next: true,
+        has_prev: false,
+        count: 50,
+        next_page: 1,
+        prev_page: -1,
+        entries: _
+      } = result
+
+      assert Enum.count(result[:entries]) == @default_per_page + 1
+      assert %User{} = List.first(result[:entries])
+      assert %{has_next: false, entries: []} = Accounts.paginate_users(5)
+    end
+  end
 end
