@@ -1,4 +1,7 @@
 defmodule BlogPostApi.Pagination do
+  @moduledoc """
+  Module that includes `page/3` for pagination query.
+  """
   import Ecto.Query
   alias BlogPostApi.Repo
 
