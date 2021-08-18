@@ -1,4 +1,5 @@
 defmodule BlogPostApi.Accounts.User do
+  @moduledoc false
   use BlogPostApi.Schema
 
   @optional_fields ~w(display_name image)a

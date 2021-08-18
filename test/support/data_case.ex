@@ -15,6 +15,8 @@ defmodule BlogPostApi.DataCase do
   """
 
   use ExUnit.CaseTemplate
+  alias BlogPostApi.Repo
+  alias Ecto.Adapters.SQL.Sandbox
 
   using do
     quote do
@@ -29,10 +31,10 @@ defmodule BlogPostApi.DataCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(BlogPostApi.Repo)
+    :ok = Sandbox.checkout(Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(BlogPostApi.Repo, {:shared, self()})
+      Sandbox.mode(Repo, {:shared, self()})
     end
 
     :ok

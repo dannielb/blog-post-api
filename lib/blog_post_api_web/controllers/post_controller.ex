@@ -1,9 +1,9 @@
 defmodule BlogPostApiWeb.PostController do
   use BlogPostApiWeb, :controller
 
+  alias BlogPostApi.Guardian
   alias BlogPostApi.Posts
   alias BlogPostApi.Posts.Post
-  alias BlogPostApi.Guardian
 
   action_fallback BlogPostApiWeb.FallbackController
 

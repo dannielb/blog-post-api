@@ -1,4 +1,8 @@
 defmodule BlogPostApi.Factory do
+  @moduledoc """
+  Implementation of ExMachina.Ecto, responsible for creation of fake data that
+  represents the data in the project.
+  """
   use ExMachina.Ecto, repo: BlogPostApi.Repo
   alias BlogPostApi.Accounts.User
   alias BlogPostApi.Posts.Post

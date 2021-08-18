@@ -45,7 +45,8 @@ defmodule BlogPostApi.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 2.0"},
       {:faker, "~> 0.16.0", only: [:test, :dev]},
-      {:ex_machina, "~> 2.7", only: :test}
+      {:ex_machina, "~> 2.7", only: :test},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]
   end
 

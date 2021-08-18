@@ -1,7 +1,7 @@
 defmodule BlogPostApiWeb.UserControllerTest do
   use BlogPostApiWeb.ConnCase
-  alias BlogPostApi.Factory
   alias BlogPostApi.Accounts
+  alias BlogPostApi.Factory
 
   describe "POST /user" do
     test "success: register a user and returns it auth token", %{conn: conn} do

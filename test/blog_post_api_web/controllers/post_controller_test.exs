@@ -133,18 +133,30 @@ defmodule BlogPostApiWeb.PostControllerTest do
   describe "update post" do
     setup [:create_user, :conn_with_token, :create_post]
 
-    test "success: update post and returns it", %{conn_with_token: conn_with_token, post: %{id: id} = post} do
+    test "success: update post and returns it", %{
+      conn_with_token: conn_with_token,
+      post: %{id: id} = post
+    } do
       %{"title" => title, "content" => content} = Factory.string_params_for(:post)
 
       result =
-          put(conn_with_token, Routes.post_path(conn_with_token, :update, post), %{"title" => title, "content" => content})
-          |> json_response(200)
+        put(conn_with_token, Routes.post_path(conn_with_token, :update, post), %{
+          "title" => title,
+          "content" => content
+        })
+        |> json_response(200)
 
       assert %{"id" => ^id, "title" => ^title, "content" => ^content} = result
     end
 
     test "renders errors when data is invalid", %{conn_with_token: conn_with_token, post: post} do
-      conn_with_token = put(conn_with_token, Routes.post_path(conn_with_token, :update, post), Factory.string_params_for(:invalid_post))
+      conn_with_token =
+        put(
+          conn_with_token,
+          Routes.post_path(conn_with_token, :update, post),
+          Factory.string_params_for(:invalid_post)
+        )
+
       assert %{"message" => _} = json_response(conn_with_token, 400)
     end
   end

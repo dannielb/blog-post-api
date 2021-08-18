@@ -1,4 +1,5 @@
 defmodule BlogPostApi.Posts.Post do
+  @moduledoc false
   use BlogPostApi.Schema
   alias BlogPostApi.Accounts.User
 

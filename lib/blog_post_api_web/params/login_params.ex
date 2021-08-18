@@ -1,4 +1,5 @@
 defmodule BlogPostApiWeb.Params.LoginParams do
+  @moduledoc false
   use BlogPostApiWeb, :params
 
   embedded_schema do

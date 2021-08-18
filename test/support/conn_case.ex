@@ -16,6 +16,7 @@ defmodule BlogPostApiWeb.ConnCase do
   """
 
   use ExUnit.CaseTemplate
+  alias Ecto.Adapters.SQL.Sandbox
 
   using do
     quote do
@@ -51,10 +52,10 @@ defmodule BlogPostApiWeb.ConnCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(BlogPostApi.Repo)
+    :ok = Sandbox.checkout(BlogPostApi.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(BlogPostApi.Repo, {:shared, self()})
+      Sandbox.mode(BlogPostApi.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

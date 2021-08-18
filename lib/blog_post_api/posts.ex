@@ -6,8 +6,8 @@ defmodule BlogPostApi.Posts do
   import Ecto.Query, warn: false
   alias BlogPostApi.Repo
 
-  alias BlogPostApi.Posts.Post
   alias BlogPostApi.Accounts.User
+  alias BlogPostApi.Posts.Post
 
   @doc """
   Returns the list of posts.

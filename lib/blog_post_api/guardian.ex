@@ -1,4 +1,5 @@
 defmodule BlogPostApi.Guardian do
+  @moduledoc false
   use Guardian, otp_app: :blog_post_api
   alias BlogPostApi.Accounts
 
