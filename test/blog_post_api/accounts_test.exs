@@ -51,13 +51,19 @@ defmodule BlogPostApi.AccountsTest do
       %{user: user, user_password: user_params["password"]}
     end
 
-    test "success: receives a user with valid email and password", %{user: user, user_password: user_password} do
+    test "success: receives a user with valid email and password", %{
+      user: user,
+      user_password: user_password
+    } do
       assert {:ok, ^user} = Accounts.get_user_by_credentials(user.email, user_password)
     end
 
     test "error: receives error tuple when given invalid credentials", %{user: user} do
-      assert {:error, :invalid_data} = Accounts.get_user_by_credentials(user.email, "i-am-invalid")
-      assert {:error, :invalid_data} = Accounts.get_user_by_credentials("invalid-email@email", "i-am-invalid")
+      assert {:error, :invalid_data} =
+               Accounts.get_user_by_credentials(user.email, "i-am-invalid")
+
+      assert {:error, :invalid_data} =
+               Accounts.get_user_by_credentials("invalid-email@email", "i-am-invalid")
     end
   end
 
