@@ -54,7 +54,7 @@ defmodule BlogPostApiWeb.PostController do
 
   defp validate_post(conn, _opts) do
     with {:ok, user} <- Guardian.Plug.current_resource(conn),
-         {:ok, post} = Posts.get_post(conn.params["id"]),
+         {:ok, post} <- Posts.get_post(conn.params["id"]),
          {:ok, _post} <- Posts.is_the_owner?(post, user) do
       conn
       |> assign(:post, post)

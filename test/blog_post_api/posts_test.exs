@@ -135,9 +135,16 @@ defmodule BlogPostApi.PostsTest do
   end
 
   defp assert_search_results(results, search_term) do
+    search_term = String.downcase(search_term)
+
     for result <- results do
-      assert String.contains?(result.title, search_term) or
-               String.contains?(result.content, search_term)
+      title = String.downcase(result.title)
+      content = String.downcase(result.content)
+
+      assert String.contains?(title, search_term) or String.contains?(content, search_term),
+             "term \"#{search_term}\" not found in title \"#{title}\" or content in title \"#{
+               content
+             }\ "
     end
   end
 end

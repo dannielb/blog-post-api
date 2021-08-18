@@ -118,8 +118,8 @@ defmodule BlogPostApi.Posts do
     term = "%" <> String.replace(term, " ", "%") <> "%"
 
     from(p in Post,
-      where: like(p.title, ^term),
-      or_where: like(p.content, ^term)
+      where: ilike(p.title, ^term),
+      or_where: ilike(p.content, ^term)
     )
     |> Repo.all()
     |> Repo.preload(:user)

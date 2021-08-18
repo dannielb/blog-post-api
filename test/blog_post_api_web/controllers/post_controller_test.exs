@@ -101,9 +101,11 @@ defmodule BlogPostApiWeb.PostControllerTest do
         get(conn_with_token, Routes.post_path(conn_with_token, :search, %{"q" => search_term}))
         |> json_response(200)
 
+      search_term = String.downcase(search_term)
       for r <- results do
-        assert String.contains?(r["title"], search_term) or
-                 String.contains?(r["content"], search_term)
+        title = String.downcase(r["title"])
+        content = String.downcase(r["content"])
+        assert String.contains?(title, search_term) or  String.contains?(content, search_term)
       end
     end
   end
@@ -114,6 +116,9 @@ defmodule BlogPostApiWeb.PostControllerTest do
     test "success: deletes chosen post", %{conn_with_token: conn_with_token, post: post} do
       assert delete(conn_with_token, Routes.post_path(conn_with_token, :delete, post))
              |> response(204)
+
+      assert delete(conn_with_token, Routes.post_path(conn_with_token, :delete, post))
+             |> response(404)
 
       assert get(conn_with_token, Routes.post_path(conn_with_token, :show, post))
              |> response(404)

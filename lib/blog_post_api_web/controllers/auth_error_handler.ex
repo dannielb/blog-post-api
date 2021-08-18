@@ -11,7 +11,7 @@ defmodule BlogPostApiWeb.AuthErrorHandler do
     |> render("unauthorized.json", [])
   end
 
-  def auth_error(conn, {:invalid_token, :invalid_token}, _opts) do
+  def auth_error(conn, {:invalid_token, _}, _opts) do
     conn
     |> put_status(:unauthorized)
     |> put_view(BlogPostApiWeb.AuthView)
