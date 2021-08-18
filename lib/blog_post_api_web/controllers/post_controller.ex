@@ -14,6 +14,15 @@ defmodule BlogPostApiWeb.PostController do
     render(conn, "index.json", posts: posts)
   end
 
+  def paginate(conn, %{"page_number" => page_number}) do
+    try do
+      pagination = Posts.paginate_posts(page_number)
+      render(conn, "index_paginated.json", pagination: pagination)
+    rescue
+      ArgumentError -> {:error, :invalid_data}
+    end
+  end
+
   def search(conn, %{"q" => term}) do
     posts = Posts.search_post(term)
     render(conn, "index.json", posts: posts)

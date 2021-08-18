@@ -12,6 +12,10 @@ How to run the project:
 How to run the tests:
   - run  `mix test` 
 
+Application deployed on heroku and can also be used by its endpoint: `https://blog--post-api.herokuapp.com`.
+
+All routes can be manually tested with `insomnia` using the exported collection(`insomnia_collection`).
+
 ## Current features:
 
 - [x] route for register a user and return a valid jwt token
