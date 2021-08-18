@@ -23,7 +23,7 @@ defmodule BlogPostApiWeb.Router do
   scope "/", BlogPostApiWeb do
     pipe_through [:api, :ensure_authed_access]
 
-    resources "/user", UserController, only: [:index, :show,]
+    resources "/user", UserController, only: [:index, :show]
     put "/user", UserController, :update
     delete "/user/me", UserController, :delete
 

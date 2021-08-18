@@ -51,13 +51,6 @@ defmodule BlogPostApiWeb do
     end
   end
 
-  def channel do
-    quote do
-      use Phoenix.Channel
-      import BlogPostApiWeb.Gettext
-    end
-  end
-
   defp view_helpers do
     quote do
       # Import basic rendering functionality (render, render_layout, etc)
