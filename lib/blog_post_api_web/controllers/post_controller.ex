@@ -41,7 +41,7 @@ defmodule BlogPostApiWeb.PostController do
   end
 
   def update(conn, post_params) do
-    with  {:ok, %Post{} = post} <- Posts.update_post(conn.assigns[:post], post_params) do
+    with {:ok, %Post{} = post} <- Posts.update_post(conn.assigns[:post], post_params) do
       render(conn, "show.json", post: post)
     end
   end
@@ -54,9 +54,8 @@ defmodule BlogPostApiWeb.PostController do
 
   defp validate_post(conn, _opts) do
     with {:ok, user} <- Guardian.Plug.current_resource(conn),
-      {:ok, post} = Posts.get_post(conn.params["id"]),
-      {:ok, _post} <- Posts.is_the_owner?(post, user)
-      do
+         {:ok, post} = Posts.get_post(conn.params["id"]),
+         {:ok, _post} <- Posts.is_the_owner?(post, user) do
       conn
       |> assign(:post, post)
     else
@@ -74,5 +73,4 @@ defmodule BlogPostApiWeb.PostController do
         |> halt()
     end
   end
-
 end

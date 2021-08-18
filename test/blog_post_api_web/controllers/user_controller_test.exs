@@ -62,6 +62,30 @@ defmodule BlogPostApiWeb.UserControllerTest do
     end
   end
 
+  describe "PUT /user" do
+    setup [:create_user, :conn_with_token]
+
+    test "success: update user data with success", %{
+      conn_with_token: conn_with_token,
+      user: user
+    } do
+      update_params = Factory.string_params_for(:user) |> Map.take(["display_name"])
+
+      updated_user =
+        put(conn_with_token, Routes.user_path(conn_with_token, :update, update_params))
+        |> json_response(200)
+
+      assert updated_user["display_name"] == update_params["display_name"]
+      assert updated_user["id"] == user.id
+    end
+
+    test "error: receives an error with invalid data", %{conn_with_token: conn_with_token} do
+      assert %{"message" => _} =
+               put(conn_with_token, Routes.user_path(conn_with_token, :update, %{email: ""}))
+               |> json_response(400)
+    end
+  end
+
   describe "GET /user" do
     setup [:create_user, :conn_with_token]
 
@@ -102,7 +126,7 @@ defmodule BlogPostApiWeb.UserControllerTest do
     end
   end
 
-  describe "delete user" do
+  describe "DELETE user/me" do
     setup [:create_user, :conn_with_token]
 
     test "success: deletes current user", %{conn_with_token: conn_with_token, user: user} do
