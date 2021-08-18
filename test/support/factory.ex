@@ -1,6 +1,7 @@
 defmodule BlogPostApi.Factory do
   use ExMachina.Ecto, repo: BlogPostApi.Repo
   alias BlogPostApi.Accounts.User
+  alias BlogPostApi.Posts.Post
 
   def user_factory do
     %User{
@@ -17,6 +18,22 @@ defmodule BlogPostApi.Factory do
       email: DateTime.utc_now(),
       password: Enum.random(1..10),
       image: DateTime.utc_now()
+    }
+  end
+
+  def post_factory do
+    %Post{
+      title: Faker.Lorem.sentence(),
+      content: Faker.Lorem.paragraph(),
+      user: build(:user)
+    }
+  end
+
+  def invalid_post_factory do
+    %Post{
+      title: DateTime.utc_now(),
+      content: Enum.random(1..5),
+      user_id: DateTime.utc_now()
     }
   end
 end

@@ -8,4 +8,8 @@ defmodule BlogPostApiWeb.AuthView do
   def render("invalid_token.json", _) do
     %{"message" => "Token expirado ou Invalido"}
   end
+
+  def render("user_without_privileges.json", _) do
+    %{"message" => "Usuário nao authorizado"}
+  end
 end

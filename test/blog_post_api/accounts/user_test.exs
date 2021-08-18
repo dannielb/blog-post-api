@@ -8,8 +8,8 @@ defmodule BlogPostApi.Accounts.UserTest do
     {:email, :string},
     {:password, :string},
     {:image, :string},
-    {:inserted_at, :utc_datetime_usec},
-    {:updated_at, :utc_datetime_usec}
+    {:inserted_at, :naive_datetime},
+    {:updated_at, :naive_datetime}
   ]
 
   @optional_for_creation [:id, :display_name, :image, :inserted_at, :updated_at]
@@ -28,8 +28,7 @@ defmodule BlogPostApi.Accounts.UserTest do
           {field, type}
         end
 
-      assert MapSet.new(actual_fields_with_types) ==
-               MapSet.new(@expected_fields_with_types)
+      assert MapSet.new(actual_fields_with_types) == MapSet.new(@expected_fields_with_types)
     end
   end
 

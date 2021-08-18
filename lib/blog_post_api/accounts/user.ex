@@ -1,12 +1,8 @@
 defmodule BlogPostApi.Accounts.User do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use BlogPostApi.Schema
 
-  @timestamps_opts type: :utc_datetime_usec
-  @primary_key {:id, :binary_id, autogenerate: true}
-
-  @optional_create_fields [:id, :display_name, :image, :inserted_at, :updated_at]
-  @forbidden_update_fields [:id, :inserted_at, :updated_at]
+  @optional_fields ~w(display_name image)a
+  @forbidden_update_fields ~w(id inserted_at updated_at)a
 
   schema "users" do
     field :display_name, :string
@@ -18,25 +14,23 @@ defmodule BlogPostApi.Accounts.User do
   end
 
   defp all_fields do
-    __MODULE__.__schema__(:fields)
+    __MODULE__.__schema__(:fields) -- @forbidden_update_fields
   end
 
-  def create_changeset(params) do
+  def create_changeset(attrs) do
     %__MODULE__{}
-    |> cast(params, all_fields())
-    |> validate_required(all_fields() -- @optional_create_fields)
-    |> changeset()
+    |> changeset(attrs)
   end
 
-  def update_changeset(%__MODULE__{} = user, params) do
+  def update_changeset(%__MODULE__{} = user, attrs) do
     user
-    |> cast(params, all_fields() -- @forbidden_update_fields)
-    |> validate_required(all_fields() -- @optional_create_fields)
-    |> changeset()
+    |> changeset(attrs)
   end
 
-  def changeset(changeset) do
+  def changeset(changeset, attrs) do
     changeset
+    |> cast(attrs, all_fields())
+    |> validate_required(all_fields() -- @optional_fields)
     |> validate_length(:display_name, min: 8)
     |> validate_length(:password, min: 6)
     |> unique_constraint(:email, message: "Usuário ja existe")

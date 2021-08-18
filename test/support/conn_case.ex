@@ -28,6 +28,25 @@ defmodule BlogPostApiWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint BlogPostApiWeb.Endpoint
+
+      # Helpers for authentication
+      defp create_user(_) do
+        {:ok, user} =
+          BlogPostApi.Accounts.create_user(BlogPostApi.Factory.string_params_for(:user))
+
+        %{user: user}
+      end
+
+      defp conn_with_token(context) do
+        {:ok, token, _} =
+          BlogPostApi.Guardian.encode_and_sign(context.user, %{}, token_type: :access)
+
+        conn_with_token =
+          context.conn
+          |> put_req_header("authorization", "Bearer " <> token)
+
+        %{conn_with_token: conn_with_token}
+      end
     end
   end
 
