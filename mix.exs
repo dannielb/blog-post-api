@@ -41,7 +41,12 @@ defmodule BlogPostApi.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:bcrypt_elixir, "~> 2.0"},
+      {:guardian, "~> 2.0"},
+      {:faker, "~> 0.16.0", only: [:test, :dev]},
+      {:ex_machina, "~> 2.7", only: :test},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]
   end
 

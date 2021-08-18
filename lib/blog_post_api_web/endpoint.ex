@@ -10,9 +10,6 @@ defmodule BlogPostApiWeb.Endpoint do
     signing_salt: "3qJ+3fZZ"
   ]
 
-  socket "/socket", BlogPostApiWeb.UserSocket,
-    websocket: true,
-    longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
   #

@@ -16,6 +16,7 @@ defmodule BlogPostApiWeb.ConnCase do
   """
 
   use ExUnit.CaseTemplate
+  alias Ecto.Adapters.SQL.Sandbox
 
   using do
     quote do
@@ -28,14 +29,33 @@ defmodule BlogPostApiWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint BlogPostApiWeb.Endpoint
+
+      # Helpers for authentication
+      defp create_user(_) do
+        {:ok, user} =
+          BlogPostApi.Accounts.create_user(BlogPostApi.Factory.string_params_for(:user))
+
+        %{user: user}
+      end
+
+      defp conn_with_token(context) do
+        {:ok, token, _} =
+          BlogPostApi.Guardian.encode_and_sign(context.user, %{}, token_type: :access)
+
+        conn_with_token =
+          context.conn
+          |> put_req_header("authorization", "Bearer " <> token)
+
+        %{conn_with_token: conn_with_token}
+      end
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(BlogPostApi.Repo)
+    :ok = Sandbox.checkout(BlogPostApi.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(BlogPostApi.Repo, {:shared, self()})
+      Sandbox.mode(BlogPostApi.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

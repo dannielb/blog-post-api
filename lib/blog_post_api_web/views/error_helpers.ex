@@ -6,7 +6,7 @@ defmodule BlogPostApiWeb.ErrorHelpers do
   @doc """
   Translates an error message using gettext.
   """
-  def translate_error({msg, opts}) do
+  def translate_error({field, {msg, opts}}) do
     # When using gettext, we typically pass the strings we want
     # to translate as a static argument:
     #
@@ -25,9 +25,11 @@ defmodule BlogPostApiWeb.ErrorHelpers do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(BlogPostApiWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(BlogPostApiWeb.Gettext, "errors", msg, msg, count, [
+        {:field, field} | opts
+      ])
     else
-      Gettext.dgettext(BlogPostApiWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(BlogPostApiWeb.Gettext, "errors", msg, [{:field, field} | opts])
     end
   end
 end

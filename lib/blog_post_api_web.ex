@@ -51,13 +51,6 @@ defmodule BlogPostApiWeb do
     end
   end
 
-  def channel do
-    quote do
-      use Phoenix.Channel
-      import BlogPostApiWeb.Gettext
-    end
-  end
-
   defp view_helpers do
     quote do
       # Import basic rendering functionality (render, render_layout, etc)
@@ -66,6 +59,15 @@ defmodule BlogPostApiWeb do
       import BlogPostApiWeb.ErrorHelpers
       import BlogPostApiWeb.Gettext
       alias BlogPostApiWeb.Router.Helpers, as: Routes
+    end
+  end
+
+  def params do
+    quote do
+      use Ecto.Schema
+      import Ecto.Changeset
+
+      @primary_key false
     end
   end
 
