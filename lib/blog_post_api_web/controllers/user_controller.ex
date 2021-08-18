@@ -13,6 +13,15 @@ defmodule BlogPostApiWeb.UserController do
     render(conn, "index.json", users: users)
   end
 
+  def paginate(conn, %{"page_number" => page_number}) do
+    try do
+      pagination = Accounts.paginate_users(page_number)
+      render(conn, "index_paginated.json", pagination: pagination)
+    rescue
+      ArgumentError -> {:error, :invalid_data}
+    end
+  end
+
   def create(conn, user_params) do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params),
          {:ok, token, _} <- Guardian.encode_and_sign(user) do

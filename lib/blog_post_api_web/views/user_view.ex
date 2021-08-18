@@ -23,6 +23,18 @@ defmodule BlogPostApiWeb.UserView do
     }
   end
 
+  def render("index_paginated.json", %{pagination: pagination}) do
+    %{
+      has_next: pagination.has_next,
+      has_prev: pagination.has_prev,
+      prev_page: pagination.prev_page,
+      next_page: pagination.next_page,
+      current_page: pagination.current_page,
+      count: pagination.count,
+      entries: render_many(pagination.entries, UserView, "user.json")
+    }
+  end
+
   def render("404.json", _params) do
     %{message: "Usuário não existe"}
   end

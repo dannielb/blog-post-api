@@ -28,6 +28,37 @@ defmodule BlogPostApiWeb.UserControllerTest do
     end
   end
 
+  describe "GET /post/paginate/:page_number" do
+    setup [:create_user, :conn_with_token]
+
+    setup do
+      users = Factory.insert_list(49, :user)
+      %{users: users}
+    end
+
+    test "success: lists users with pagination", %{conn_with_token: conn_with_token} do
+      assert %{
+               "has_next" => true,
+               "has_prev" => false,
+               "count" => 50,
+               "next_page" => 1,
+               "prev_page" => -1,
+               "entries" => [
+                 %{
+                   "display_name" => _,
+                   "email" => _,
+                   "id" => _,
+                   "image" => _
+                 }
+                 | _
+               ]
+             } =
+               conn_with_token
+               |> get(Routes.user_path(conn_with_token, :paginate, 1))
+               |> json_response(200)
+    end
+  end
+
   describe "POST /login" do
     @default_password "my-password"
 
