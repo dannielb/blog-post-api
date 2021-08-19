@@ -10,7 +10,7 @@ How to run the project:
   - if everything goes ok, the application will be available by default on port 4000.
 
 How to run the tests:
-  - run  `mix test` 
+  - run  `mix test`
 
 Application deployed on heroku and can also be used by its endpoint: `https://blog--post-api.herokuapp.com`.
 
@@ -33,4 +33,24 @@ All routes can be manually tested with `insomnia` using the exported collection(
 - [x] route for searching a post by it title or content
 
 - [x] route for deleting a post
+
+- [x] route for getting all users or posts with validation(most safe than receive All data in a table with just one request)
+
+## improvement points.
+
+- currently the Posts's search is a simple `ilike` query, despite being functional, it is necessary to score exactly the text to be searched to receive good results, an option for the next viable level would be to use something like [Postgres's Full text search](https://www.postgresql.org/docs/9.5/textsearch.html).
+
+## Dependencies
+
+[Phoenix](https://phoenixframework.org/)
+
+[Guardian](https://hexdocs.pm/guardian/Guardian.html)
+
+[Bcrypt](https://hexdocs.pm/bcrypt_elixir/Bcrypt.html)
+
+[Faker](https://hexdocs.pm/faker/api-reference.html)
+
+[ExMachina](https://hexdocs.pm/ex_machina/readme.html)
+
+[Credo](https://hexdocs.pm/credo/overview.html)
 
