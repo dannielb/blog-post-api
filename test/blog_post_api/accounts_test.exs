@@ -125,8 +125,8 @@ defmodule BlogPostApi.AccountsTest do
         has_next: true,
         has_prev: false,
         count: 50,
-        next_page: 1,
-        prev_page: -1,
+        next_page: 2,
+        prev_page: 0,
         entries: _
       } = result
 
